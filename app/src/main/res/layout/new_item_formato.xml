@@ -15,7 +15,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:id="@+id/cardViewNotification_parent_1"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="13dp"
         android:layout_marginRight="5dp"
         app:cardPreventCornerOverlap="false">
@@ -23,18 +23,83 @@
         <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{result.productDisplayName}"
-                />
+            <me.thanel.swipeactionview.SwipeActionView
+                android:layout_toRightOf="@+id/ll_dot"
+                android:id="@+id/swipe_layout"
+                style="@style/SwipeItem">
+
+                <LinearLayout style="@style/Container">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardViewNotification_parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp">
+
+                        <RelativeLayout
+                            android:id="@+id/cardViewNotification"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="start"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:id="@+id/img"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_height="match_parent">
+
+                                    <TextView
+                                        android:text="@{result.productDisplayName}"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content" />
+
+                                    <TextView
+                                        android:text='@{"Precio: $" + String.valueOf(result.listPrice)}'
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content" />
+
+                                    <TextView
+                                        android:text='@{"Vendido por: " +result.seller}'
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:text='@{"Promocion: $" + String.valueOf(result.promoPrice)}'
+                                android:layout_width="wrap_content"
+                                android:textStyle="bold"
+                                android:textSize="20sp"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:layout_centerHorizontal="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_height="wrap_content" />
+
+                        </RelativeLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </me.thanel.swipeactionview.SwipeActionView>
+
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 
 </layout>
-
 

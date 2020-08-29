@@ -1,35 +1,40 @@
 package com.gibreelm.gapsi.viewmodel;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.StrictMode;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
-import com.arlib.floatingsearchview.FloatingSearchView;
 import com.gibreelm.gapsi.R;
 import com.gibreelm.gapsi.activity.MainActivity;
 import com.gibreelm.gapsi.adapter.RecyclerViewAdapterResult;
 import com.gibreelm.gapsi.databinding.ActivityMainBinding;
+import com.gibreelm.gapsi.model.Record;
 import com.gibreelm.gapsi.model.Root;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
-
 public class MainViewModel extends ViewModel {
     private MainActivity activity;
     private ActivityMainBinding binding;
     private String searchTxt = "";
+    private int index = 0;
 
-    public ObservableField<Boolean> isFilterVisible = new ObservableField<>(false);
+    List<Record> records = new ArrayList<>();
 
     public MainViewModel(MainActivity activity) {
         this.activity = activity;
@@ -41,26 +46,38 @@ public class MainViewModel extends ViewModel {
         initViews();
     }
 
+    public static void HideKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     private void initViews() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        binding.floatingSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
-            @Override
-            public void onSearchTextChanged(String oldQuery, final String newQuery) {
+        binding.floatingSearchView.setOnQueryChangeListener((oldQuery, newQuery) -> searchTxt = newQuery);
 
-                searchTxt = newQuery;
+        binding.btnBuscar.setOnClickListener(v -> {
+            try {
+                records.clear();
+                request(searchTxt, 1, 5);
+                index = 1;
+                HideKeyboard(activity);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
 
-        binding.btnBuscar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    request(searchTxt, 1, 3);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        binding.btnBuscarMas.setOnClickListener(v -> {
+            try {
+                index = index + 1;
+                request(searchTxt, index, 5);
+                HideKeyboard(activity);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
     }
@@ -81,18 +98,18 @@ public class MainViewModel extends ViewModel {
             String res = "";
             res = response.body().string();
             Root resultObj = g.fromJson(res, Root.class);
-
-            setResult(resultObj);
+            records.addAll(resultObj.plpResults.records);
+            setResult(records);
         }
     }
 
-    private void setResult(Root resultObj) {
+    private void setResult(List<Record> records) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.rvRes.setLayoutManager(linearLayoutManager);
-        RecyclerViewAdapterResult recyclerViewAdapter = new RecyclerViewAdapterResult(resultObj.plpResults.records, activity);
+        RecyclerViewAdapterResult recyclerViewAdapter = new RecyclerViewAdapterResult(records, activity);
         binding.rvRes.setAdapter(recyclerViewAdapter);
-        binding.rvRes.addItemDecoration(new DividerItemDecoration(activity, VERTICAL));
+        binding.btnBuscarMas.setVisibility(View.VISIBLE);
     }
 
 }

@@ -8,6 +8,7 @@ import com.gibreelm.gapsi.BR;
 import com.gibreelm.gapsi.R;
 import com.gibreelm.gapsi.databinding.NewItemFormatoBinding;
 import com.gibreelm.gapsi.model.Record;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -40,6 +41,8 @@ public class RecyclerViewAdapterResult extends RecyclerView.Adapter<RecyclerView
 
         holder.itemFormatoBinding.setResult(recordResult);
         holder.bind(recordResult);
+
+        Picasso.get().load(recordResult.smImage).into(holder.itemFormatoBinding.img);
 
     }
 
