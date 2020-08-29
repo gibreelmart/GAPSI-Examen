@@ -1,4 +1,4 @@
-package com.gibreelm.gapsi;
+package com.gibreelm.gapsi.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             Intent i = new Intent (SplashScreenActivity.this, MainActivity.class);
             startActivity(i);
             finish ();
-        }, 2000);
+        }, 100);
     }
 
     @Override

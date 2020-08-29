@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="result"
+            type="com.gibreelm.gapsi.model.Record" />
+
+        <import type="android.view.View" />
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:id="@+id/cardViewNotification_parent_1"
+        android:layout_height="100dp"
+        android:layout_marginBottom="13dp"
+        android:layout_marginRight="5dp"
+        app:cardPreventCornerOverlap="false">
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{result.productDisplayName}"
+                />
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</layout>
+
+
